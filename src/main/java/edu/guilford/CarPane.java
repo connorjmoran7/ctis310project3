@@ -50,6 +50,9 @@ public class CarPane extends GridPane {
 
     private Rectangle carBackground;
 
+    // Add a label to tell the user they have entered an invalid input
+    private Label errorLabel;
+
     // Constructor
 
     public CarPane(Car car) {
@@ -76,6 +79,7 @@ public class CarPane extends GridPane {
         mileageLabel = new Label("Mileage:");
         analysisLabel = new Label("Car score out of 30:");
         resultsLabel = new Label();
+        errorLabel = new Label("");
 
         colorPicker = new ColorPicker();
         colorPicker.setValue(javafx.scene.paint.Color.BLACK);
@@ -119,6 +123,9 @@ public class CarPane extends GridPane {
         carPicture.setFitHeight(125);
         carPicture.setPreserveRatio(true);
 
+        // Add the error field below the results label
+        add(errorLabel, 4, 2);
+
         // When the new car pane is instantiated, the text fields should be populated
         // with the car's attributes and the results label should be populated with the
         // car's score
@@ -140,25 +147,115 @@ public class CarPane extends GridPane {
             priceField.setText(Integer.toString(newCar.getPrice()));
             mileageField.setText(Integer.toString(newCar.getMileage()));
             resultsLabel.setText(Double.toString(newCar.analyze()));
+            errorLabel.setText("");
         });
 
         // When the buy button is clicked, a label should appear that says "Thank you
         // for your purchase!"
         buyButton.setOnAction(e -> {
-            Label thankYouLabel = new Label("Thank you for your purchase!");
-            add(thankYouLabel, 3, 6);
+            try {
+                if (car.getMake().matches(".*\\d.*")) {
+                    throw new BadMakeException();
+                }
+                car.setModel(modelField.getText());
+                if (car.getModel().matches(".*\\d.*")) {
+                    throw new BadModelException();
+                }
+                car.setYear(Integer.parseInt(yearField.getText()));
+                if (car.getYear() < 1980 || car.getYear() > 2024) {
+                    throw new BadYearException();
+                }
+                car.setPrice(Integer.parseInt(priceField.getText()));
+                if (car.getPrice() < 0 || car.getPrice() > 100000) {
+                    throw new BadPriceException();
+                }
+                car.setMileage(Integer.parseInt(mileageField.getText()));
+                if (car.getMileage() < 0 || car.getMileage() > 500000) {
+                    throw new BadMileageException();
+                }
+                Label thankYouLabel = new Label("Thank you for your purchase!");
+                add(thankYouLabel, 3, 6);
+            } catch (BadMakeException bme) {
+                // If the data entered is a number, the user should be informed
+                // and then asked to enter a string
+                errorLabel.setText("Please enter a make, not a number.");
+            } catch (BadModelException bme) {
+                // If the data entered is a number, the user should be informed
+                // and then asked to enter a string
+                errorLabel.setText("Please enter a model, not a number.");
+            } catch (BadYearException bye) {
+                // If the data entered is not between 1980 and 2023, the user
+                // should be informed and then asked to enter a number between
+                // 1980 and 2023
+                errorLabel.setText("Please enter a year between 1980 and 2023.");
+            } catch (BadPriceException bpe) {
+                // If the data entered is not between 0 and 100,000, the user
+                // should be informed and then asked to enter a number between
+                // 0 and 100,000
+                errorLabel.setText("Please enter a price between 0 and 100,000.");
+            } catch (BadMileageException bme) {
+                // If the data entered is not between 0 and 500,000, the user
+                // should be informed and then asked to enter a number between
+                // 0 and 500,000
+                errorLabel.setText("Please enter a mileage between 0 and 500,000.");
+            }
         });
 
         // When the customize button is clicked, the car's attributes should be updated
         // with the user's input, and the analysis label should be updated with the
         // car's score
         customizeButton.setOnAction(e -> {
-            car.setMake(makeField.getText());
-            car.setModel(modelField.getText());
-            car.setYear(Integer.parseInt(yearField.getText()));
-            car.setPrice(Integer.parseInt(priceField.getText()));
-            car.setMileage(Integer.parseInt(mileageField.getText()));
-            resultsLabel.setText(Integer.toString(car.analyze()));
+            try {
+                car.setMake(makeField.getText());
+                if (car.getMake().matches(".*\\d.*")) {
+                    throw new BadMakeException();
+                }
+                car.setModel(modelField.getText());
+                if (car.getModel().matches(".*\\d.*")) {
+                    throw new BadModelException();
+                }
+                car.setYear(Integer.parseInt(yearField.getText()));
+                if (car.getYear() < 1980 || car.getYear() > 2024) {
+                    throw new BadYearException();
+                }
+                car.setPrice(Integer.parseInt(priceField.getText()));
+                if (car.getPrice() < 0 || car.getPrice() > 100000) {
+                    throw new BadPriceException();
+                }
+                car.setMileage(Integer.parseInt(mileageField.getText()));
+                if (car.getMileage() < 0 || car.getMileage() > 500000) {
+                    throw new BadMileageException();
+                }
+                resultsLabel.setText(Integer.toString(car.analyze()));
+                errorLabel.setText("");
+            } catch (NumberFormatException nfe) {
+                // If the data entered is a string, the user should be informed
+                // and then asked to enter an integer
+                errorLabel.setText("Please enter an integer.");
+            } catch (BadMakeException bme) {
+                // If the data entered is a number, the user should be informed
+                // and then asked to enter a string
+                errorLabel.setText("Please enter a make, not a number.");
+            } catch (BadModelException bme) {
+                // If the data entered is a number, the user should be informed
+                // and then asked to enter a string
+                errorLabel.setText("Please enter a model, not a number.");
+            } catch (BadYearException bye) {
+                // If the data entered is not between 1980 and 2023, the user
+                // should be informed and then asked to enter a number between
+                // 1980 and 2023
+                errorLabel.setText("Please enter a year between 1980 and 2023.");
+            } catch (BadPriceException bpe) {
+                // If the data entered is not between 0 and 100,000, the user
+                // should be informed and then asked to enter a number between
+                // 0 and 100,000
+                errorLabel.setText("Please enter a price between 0 and 100,000.");
+            } catch (BadMileageException bme) {
+                // If the data entered is not between 0 and 500,000, the user
+                // should be informed and then asked to enter a number between
+                // 0 and 500,000
+                errorLabel.setText("Please enter a mileage between 0 and 500,000.");
+            }
         });
 
         // When the color picker is clicked, the rectangle behind the car
@@ -167,6 +264,36 @@ public class CarPane extends GridPane {
             carBackground.setFill(colorPicker.getValue());
         });
 
+    }
+
+    private static class BadMakeException extends Exception {
+        public BadMakeException() {
+            super("Please enter a make, not a number.");
+        }
+    }
+
+    private static class BadModelException extends Exception {
+        public BadModelException() {
+            super("Please enter a model, not a number.");
+        }
+    }
+
+    private static class BadYearException extends Exception {
+        public BadYearException() {
+            super("Please enter a year between 1980 and 2023.");
+        }
+    }
+
+    private static class BadMileageException extends Exception {
+        public BadMileageException() {
+            super("Please enter a mileage between 0 and 500,000.");
+        }
+    }
+
+    private static class BadPriceException extends Exception {
+        public BadPriceException() {
+            super("Please enter a price between 0 and 100,000.");
+        }
     }
 
 }
