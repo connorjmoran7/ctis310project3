@@ -1,0 +1,31 @@
+CTIS 310 Project 6 - Errors and Exceptions List
+
+1. NumberFormatException
+
+This is caused when inputting a String, double, or an int out of range.
+
+Other possibilities (Things that can be wrong, but don't send an error)
+
+1. BadMakeException and BadModelException
+
+If the make or model field recieves the input of anything but a String,
+the program will prompt the user to enter a String.
+
+
+2. BadYearException
+
+If the car's year was entered as greater than 2024, or older than 1980,
+the program should send an error and prompt the user for a input within
+the proper range.
+
+3. BadMileageException
+
+Entering a number under 0 would throw this error, or entering a number over
+500,000 would also trigger it. The prompt would signal for the user to input
+a reasonable value.
+
+4. BadPriceException
+
+A price below 0 would not be possible, and a price over $100,000 would also be out
+of the range. (For the car dealership I've designed)
+
